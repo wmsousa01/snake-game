@@ -10,7 +10,6 @@ function gameLoop(currentTime) {
     renderTime = currentTime
 
     updateSnake()
-    updateFood()
     drawSnake()
 }
 
@@ -21,9 +20,12 @@ function gameLoop(currentTime) {
 
 const snakeSpeed = 5 
 const snakeBody = [{ x: 11, y: 11 }] 
+let newSegments = 0
 
 //MOVIMENTA A SNAKE PARA POSIÇÃO CORRETA
 function updateSnake () {
+    addSegments()
+
     const direction = getDirection()  
     for(let i = snakeBody.length - 2; i >= 0; i--){
         snakeBody[i + 1] = { ...snakeBody[i] } // new object
@@ -82,13 +84,13 @@ function getDirection() {
 }
 
 // FOOD PART
-let food = { x: 10, y: 1 }
+let food = getRandomFoodPosition()
 const expansionRate = 1
 
 function updateFood () {
     if (onSnake(food)) {
         expandSnake(expansionRate)
-        food = { x: 20, y: 10 }
+        food = getRandomFoodPosition()
     }
 }
 //CONTROLA AS DIMENSÕES DO FOOD
@@ -119,4 +121,14 @@ function addSegments() {
     for (let i = 0; i < newSegments; i++) {
         snakeBody.push({ ...snakeBody[snakeBody.length -1] }) //duplica o ultimo elemento do snake
     }
+
+    newSegments = 0
+}
+
+function getRandomFoodPosition() {
+    let newFoodPosition
+    while (newFoodPosition == null || onSnake(newFoodPosition)) {
+        newFoodPosition = randomGridPosition()   
+    }
+    return newFoodPosition
 }
