@@ -84,13 +84,13 @@ function getDirection() {
 }
 
 // FOOD PART
-let food = getRandomFoodPosition()
+let food = { x: 10, y: 1 }
 const expansionRate = 1
 
 function updateFood () {
     if (onSnake(food)) {
         expandSnake(expansionRate)
-        food = getRandomFoodPosition()
+        food = { x: 20, y: 10 }
     }
 }
 //CONTROLA AS DIMENSÕES DO FOOD
@@ -131,4 +131,13 @@ function getRandomFoodPosition() {
         newFoodPosition = randomGridPosition()   
     }
     return newFoodPosition
+}
+
+const gridSize = 21
+
+function randomGridPosition () {
+    return {
+        x: Math.floor(Math.random() * gridSize) + 1,
+        y: Math.floor(Math.random() * gridSize) + 1
+    }
 }
