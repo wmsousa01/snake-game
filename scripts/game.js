@@ -1,8 +1,16 @@
 let renderTime = 0
+let gameOver = false
 const gameBoard = document.getElementById('board')
 
 // atualiza a animação na tela 
 function gameLoop(currentTime) {
+    if(gameOver) {
+       if (confirm('Que pena não foi dessa vez, aperte ok para tentar novamente.')) {
+        window.location = '/'
+       }
+       return
+    }
+
     window.requestAnimationFrame(gameLoop)
     const secSinceLastRender = (currentTime - renderTime) / 1000 //converte de miliseguntos para segundos
     if (secSinceLastRender < 1 / snakeSpeed) return //tempo entre cada movimento em segundos
@@ -11,6 +19,7 @@ function gameLoop(currentTime) {
 
     updateSnake()
     drawSnake()
+    checkDeath()
 }
 
     window.requestAnimationFrame(gameLoop)
@@ -35,7 +44,14 @@ function updateSnake () {
     snakeBody[0].y += direction.y
 
     updateFood()
+    
 }
+
+function checkDeath() {
+    gameOver = outsideGrid(getSnakeHead()) || snakeIntersection ()
+}
+
+
 //CONTROLA AS DIMENSÕES DA SNAKE
 function createSnake (gameBoard) {
     snakeBody.forEach(piece => {
@@ -84,13 +100,13 @@ function getDirection() {
 }
 
 // FOOD PART
-let food = { x: 10, y: 1 }
-const expansionRate = 1
+let food = { x: 10, y: 10 }
+const expansionRate = 5
 
 function updateFood () {
     if (onSnake(food)) {
         expandSnake(expansionRate)
-        food = { x: 20, y: 10 }
+        food = randomFoodPosition()
     }
 }
 //CONTROLA AS DIMENSÕES DO FOOD
@@ -107,10 +123,19 @@ function expandSnake(amount) {
     newSegments += amount
 }
 
-function onSnake(position) {
-    return snakeBody.some(piece => {
+function onSnake(position, { ignoreHead = false } = {}) {
+    return snakeBody.some((piece, index) => {
+        if (ignoreHead && index === 0) return false
         return equalPositions(piece, position)
     })
+}
+
+function getSnakeHead() {
+   return snakeBody[0] 
+}
+
+function snakeIntersection() {
+    return onSnake(snakeBody[0], { ignoreHead: true })
 }
 
 function equalPositions(pos1, pos2) {
@@ -125,14 +150,6 @@ function addSegments() {
     newSegments = 0
 }
 
-function getRandomFoodPosition() {
-    let newFoodPosition
-    while (newFoodPosition == null || onSnake(newFoodPosition)) {
-        newFoodPosition = randomGridPosition()   
-    }
-    return newFoodPosition
-}
-
 const gridSize = 21
 
 function randomGridPosition () {
@@ -141,3 +158,48 @@ function randomGridPosition () {
         y: Math.floor(Math.random() * gridSize) + 1
     }
 }
+
+function randomFoodPosition() {
+    let newFoodPosition
+    while (newFoodPosition == null || onSnake(newFoodPosition)) {
+        newFoodPosition = randomGridPosition()   
+    }
+    return newFoodPosition
+}
+
+function outsideGrid (position) {
+    return (
+        position.x < 1 || position.x > gridSize ||
+        position.y < 1 || position.y > gridSize
+    )
+}
+
+//AUDIO
+
+const bgAudio = document.getElementById('game-bg-audio')
+const winAudio = document.getElementById('win-audio')
+const loseAudio = document.getElementById('lose-audio')
+const tieAudio = document.getElementById('tie-audio')
+
+let audioActive = true
+
+bgAudio.volume = .15
+winAudio.volume = .3
+loseAudio.volume = .3
+tieAudio.volume = .3
+
+function changeAudio() {
+    if(audioActive) {
+        bgAudio.pause()
+        audioActive = false
+        btnAudio.innerHTML = 'Music OFF'
+    } else {
+        bgAudio.play()
+        audioActive = true
+        btnAudio.innerHTML = 'Music ON'
+    }
+}
+
+btnAudio.onclick = changeAudio
+
+
