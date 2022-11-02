@@ -37,3 +37,7 @@ body {
     display: flex;
     justify-content: space-around;
 }
+
+.score {
+    text-decoration: #ff124f;
+}

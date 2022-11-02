@@ -11,6 +11,10 @@ function gameLoop(currentTime) {
        return
     }
 
+    if(audioActive) {
+        bgAudio.play() 
+    }
+
     window.requestAnimationFrame(gameLoop)
     const secSinceLastRender = (currentTime - renderTime) / 1000 //converte de miliseguntos para segundos
     if (secSinceLastRender < 1 / snakeSpeed) return //tempo entre cada movimento em segundos
@@ -49,6 +53,7 @@ function updateSnake () {
 
 function checkDeath() {
     gameOver = outsideGrid(getSnakeHead()) || snakeIntersection ()
+    
 }
 
 
@@ -121,6 +126,7 @@ function createFood (gameBoard) {
 
 function expandSnake(amount) {
     newSegments += amount
+    upLevelAudio.play()
 }
 
 function onSnake(position, { ignoreHead = false } = {}) {
@@ -177,16 +183,16 @@ function outsideGrid (position) {
 //AUDIO
 
 const bgAudio = document.getElementById('game-bg-audio')
-const winAudio = document.getElementById('win-audio')
-const loseAudio = document.getElementById('lose-audio')
-const tieAudio = document.getElementById('tie-audio')
+const upLevelAudio = document.getElementById('up-level')
+const looseAudio = document.getElementById('loose')
+
+const btnAudio = document.getElementById('audio')
+
 
 let audioActive = true
 
 bgAudio.volume = .15
-winAudio.volume = .3
-loseAudio.volume = .3
-tieAudio.volume = .3
+
 
 function changeAudio() {
     if(audioActive) {
@@ -201,5 +207,10 @@ function changeAudio() {
 }
 
 btnAudio.onclick = changeAudio
+
+
+
+
+
 
 
