@@ -6,7 +6,7 @@ const gameBoard = document.getElementById('board')
 function gameLoop(currentTime) {
     if(gameOver) {
        if (confirm('Que pena não foi dessa vez, aperte ok para tentar novamente.')) {
-        window.location = '/'
+        window.location.reload()
        }
        return
     }
@@ -52,8 +52,8 @@ function updateSnake () {
 }
 
 function checkDeath() {
-    gameOver = outsideGrid(getSnakeHead()) || snakeIntersection ()
-    
+    gameOver = outsideGrid(getSnakeHead()) || snakeIntersection () 
+    if(gameOver) looseAudio.play()
 }
 
 
@@ -178,6 +178,7 @@ function outsideGrid (position) {
         position.x < 1 || position.x > gridSize ||
         position.y < 1 || position.y > gridSize
     )
+    
 }
 
 //AUDIO
