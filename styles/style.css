@@ -1,3 +1,5 @@
+@import url("https://fonts.googleapis.com/css?family=Barlow|Tomorrow:400,700&display=swap");
+
 body {
     background-image: url('/img/background.jpg');
     height: 100vh;
@@ -31,13 +33,31 @@ body {
     border-radius: 50px;
 }
 
-.buttons, .start-reset {
-    margin-top: 20px;
-    width: 300px;
+:root {
+    --yellow-color: #fcee09; 
+    --red-color: #ff003c;
+    --black-color: #050a0e;
+    --blue-color: #00f0ff;
+  }
+
+button, .start-reset {
     display: flex;
-    justify-content: space-around;
+    align-items: center;
+  justify-content: center;
+  border: 0;
+  outline: none;
+  background-color: var(--yellow-color);
+  color: var(--black-color);
+  cursor: pointer;
+  padding: 20px 25px;
+  position: relative;
+  font-family: Tomorrow, sans-serif;
+  font-size: .85rem;
+  text-transform: uppercase;
+
 }
 
 .score {
     text-decoration: #ff124f;
 }
+
